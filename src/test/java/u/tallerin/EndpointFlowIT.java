@@ -164,6 +164,47 @@ class EndpointFlowIT {
                 .andExpect(jsonPath("$.error").value("Bad Request"));
     }
 
+    @Test
+    void canCreateAdditionalServicesThroughApi() throws Exception {
+        mockMvc.perform(post("/api/v1/services")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name":"Interior Disinfection",
+                                  "description":"Added through API",
+                                  "basePrice":35.00,
+                                  "serviceType":"INTERIOR_DISINFECTION"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.name").value("Interior Disinfection"))
+                .andExpect(jsonPath("$.pricingMode").value("FIXED"));
+
+        mockMvc.perform(post("/api/v1/services")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name":"Truck Premium Wash",
+                                  "description":"Variable by vehicle",
+                                  "basePrice":40.00,
+                                  "serviceType":"PREMIUM_WASH",
+                                  "factorByVehicleType":{
+                                    "TRUCK":2.50,
+                                    "CAR":1.25
+                                  }
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.pricingMode").value("VARIABLE"))
+                .andExpect(jsonPath("$.factorByVehicleType.TRUCK").value(2.50));
+
+        mockMvc.perform(get("/api/v1/services"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(4));
+    }
+
     private Long createCustomer() throws Exception {
         MvcResult result = mockMvc.perform(post("/api/v1/customers")
                         .contentType(MediaType.APPLICATION_JSON)

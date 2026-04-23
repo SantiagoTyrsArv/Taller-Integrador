@@ -17,6 +17,11 @@ public class ServiceCatalogServiceImpl implements ServiceCatalogService {
     private final ServiceRepository serviceRepository;
 
     @Override
+    public Service registerService(Service service) {
+        return serviceRepository.save(service);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Service> listAll() {
         return serviceRepository.findAll();

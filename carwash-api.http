@@ -1,0 +1,126 @@
+q@baseUrl = http://localhost:8080
+
+### Create customer
+POST {{baseUrl}}/api/v1/customers
+Content-Type: application/json
+
+{
+  "name": "Ana",
+  "lastName": "Gomez",
+  "phone": "3001234567",
+  "email": "ana.gomez@example.com",
+  "address": "Cra 1 #2-3"
+}
+
+### List customers
+GET {{baseUrl}}/api/v1/customers
+
+### Get customer by id
+GET {{baseUrl}}/api/v1/customers/1
+
+### Create vehicle
+POST {{baseUrl}}/api/v1/vehicles
+Content-Type: application/json
+
+{
+  "plate": "AAA123",
+  "brand": "Toyota",
+  "model": "Corolla",
+  "year": 2022,
+  "type": "CAR",
+  "customerId": 1
+}
+
+### List vehicles
+GET {{baseUrl}}/api/v1/vehicles
+
+### Get vehicle by id
+GET {{baseUrl}}/api/v1/vehicles/1
+
+### Vehicles by customer
+GET {{baseUrl}}/api/v1/customers/1/vehicles
+
+### List services
+GET {{baseUrl}}/api/v1/services
+
+### Get service by id
+GET {{baseUrl}}/api/v1/services/1
+
+### Create order
+POST {{baseUrl}}/api/v1/orders
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "vehicleId": 1
+}
+
+### List orders
+GET {{baseUrl}}/api/v1/orders
+
+### Get order by id
+GET {{baseUrl}}/api/v1/orders/1
+
+### Update order status to IN_PROGRESS
+PATCH {{baseUrl}}/api/v1/orders/1/status
+Content-Type: application/json
+
+{
+  "status": "IN_PROGRESS"
+}
+
+### Add fixed service to order
+POST {{baseUrl}}/api/v1/orders/1/services
+Content-Type: application/json
+
+{
+  "serviceId": 1
+}
+
+### Add variable service to order
+POST {{baseUrl}}/api/v1/orders/1/services
+Content-Type: application/json
+
+{
+  "serviceId": 2
+}
+
+### Update order status to COMPLETED
+PATCH {{baseUrl}}/api/v1/orders/1/status
+Content-Type: application/json
+
+{
+  "status": "COMPLETED"
+}
+
+### Register cash payment
+POST {{baseUrl}}/api/v1/payments
+Content-Type: application/json
+
+{
+  "orderId": 1,
+  "paymentMethod": "CASH",
+  "amountPaid": 55.00
+}
+
+### Get payment by id
+GET {{baseUrl}}/api/v1/payments/1
+
+### Get payment by order id
+GET {{baseUrl}}/api/v1/payments/order/1
+
+### Deliver order
+PATCH {{baseUrl}}/api/v1/orders/1/status
+Content-Type: application/json
+
+{
+  "status": "DELIVERED"
+}
+
+### Invalid transition example: DELIVERED -> CANCELLED
+PATCH {{baseUrl}}/api/v1/orders/1/status
+Content-Type: application/json
+
+{
+  "status": "CANCELLED"
+}
