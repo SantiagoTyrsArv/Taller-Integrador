@@ -11,9 +11,18 @@ import u.tallerin.dto.response.VehicleResponse;
 public interface VehicleMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "customer", ignore = true)
+    @Mapping(target = "customer", expression = "java(mapCustomer(request.getCustomerId()))")
     Vehicle toEntity(VehicleRequest request);
 
     @Mapping(target = "customerId", expression = "java(vehicle.getCustomer() == null ? null : vehicle.getCustomer().getId())")
     VehicleResponse toResponse(Vehicle vehicle);
+
+    default Customer mapCustomer(Long customerId) {
+        if (customerId == null) {
+            return null;
+        }
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        return customer;
+    }
 }
